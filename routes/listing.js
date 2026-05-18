@@ -11,8 +11,8 @@ router
   .get(wrapAsync(listingController.index))
   .post(
     isLoggedIn,
-    validateListing,
     upload.single("listing[image]"),
+    validateListing,
     wrapAsync(listingController.createNewListing)
   );
 
@@ -43,8 +43,6 @@ router
 router.get("/:id/edit",
     isLoggedIn,
     isOwner,
-    upload.single("listing[image]"),
-    validateListing,
     wrapAsync(listingController.renderEditForm));
 
 module.exports=router;

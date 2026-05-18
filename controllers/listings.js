@@ -20,11 +20,14 @@ module.exports.createNewListing=async(req,res)=>{
     req.flash('error', 'Invalid category.');
     return res.redirect('/listings/new');
   }
-  let url=req.file.path;
-  let filename=req.file.filename;
   const newListing= new Listing(req.body.listing);
   newListing.owner=req.user._id;
-  newListing.image={url,filename};
+  if (req.file) {
+    newListing.image = {
+      url: req.file.path,
+      filename: req.file.filename,
+    };
+  }
   newListing.geometry=response.body.features[0].geometry;
   let savedListing=await newListing.save();
   req.flash("success","Listing created!");
@@ -36,7 +39,7 @@ module.exports.showListing=async (req,res)=>{
   .populate({path:"reviews",populate:{path:"author"}})
   .populate("owner");
   if(!listing){
-    req.flash("error","Requested listing does not exsist.");
+    req.flash("error","Requested listing does not exist.");
     return res.redirect("/listings");
   }
   res.render("listing/show.ejs",{listing});
@@ -45,7 +48,7 @@ module.exports.renderEditForm=async (req,res)=>{
   let {id}=req.params;
   let listing= await Listing.findById(id);
   if(!listing){
-    req.flash("error","Requested listing does not exsist.");
+    req.flash("error","Requested listing does not exist.");
     return res.redirect("/listings");
   }
   let originalImageUrl=listing.image.url;
@@ -80,4 +83,3 @@ module.exports.searchListing=async(req,res)=>{
   let listings=await Listing.find({location: { $regex: search, $options: "i" }});
   res.render("listing/display.ejs",{listings});
 };
-
