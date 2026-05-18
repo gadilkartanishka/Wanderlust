@@ -2,6 +2,10 @@
 
 A full-stack travel listing web application where users can explore stays, create listings, upload images, and leave reviews.
 
+## Live Demo
+
+https://wanderlust-cz15.onrender.com
+
 ## Features
 
 - User authentication (signup, login, logout) with Passport.js
